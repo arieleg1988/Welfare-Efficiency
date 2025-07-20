@@ -1,0 +1,21 @@
+import pandas as pd
+import statsmodels.api as sm
+
+# טען את הנתונים מקובץ Excel
+df = pd.read_excel('DEA_results.xlsx')
+
+# הגדרת משתני ההסבר
+X = df[['Is_Periphery', 'Gini']]
+X = sm.add_constant(X)  # הוספת קבוע למודל
+
+# רגרסיה עבור משתנה התלות Efficiency_VRS
+y_vrs = df['Efficiency_VRS']
+model_vrs = sm.OLS(y_vrs, X).fit()
+print("Regression results for Efficiency_VRS:")
+print(model_vrs.summary())
+
+# רגרסיה עבור משתנה התלות Efficiency_CRS
+y_crs = df['Efficiency_CRS']
+model_crs = sm.OLS(y_crs, X).fit()
+print("\nRegression results for Efficiency_CRS:")
+print(model_crs.summary())

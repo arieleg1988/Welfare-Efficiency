@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# קרא את הקובץ הכולל את הנתונים
+df = pd.read_excel('DEA_results.xlsx')
+
+# צור עמודת Scale Efficiency אם עדיין לא קיימת
+if 'Scale_Efficiency' not in df.columns:
+    df['Scale_Efficiency'] = df['Efficiency_CRS'] / df['Efficiency_VRS']
+
+# הפוך את ערך הפריפריה לקטגוריה טקסטואלית לצורך תצוגה
+df['Periphery_Label'] = df['Is_Periphery'].map({0: 'Central', 1: 'Peripheral'})
+
+# תרשים פיזור
+plt.figure(figsize=(8, 6))
+sns.stripplot(x='Periphery_Label', y='Scale_Efficiency', data=df, jitter=True, palette='Set2', alpha=0.7)
+sns.boxplot(x='Periphery_Label', y='Scale_Efficiency', data=df, whis=1.5, linewidth=1, fliersize=0, color='white')
+
+plt.title('Scale Efficiency by Municipality Location (Periphery vs. Center)', fontsize=14)
+plt.xlabel('Municipality Location')
+plt.ylabel('Scale Efficiency')
+plt.ylim(0, 1.1)
+plt.grid(True, linestyle='--', alpha=0.4)
+plt.tight_layout()
+plt.show()
